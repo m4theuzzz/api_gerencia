@@ -20,7 +20,9 @@ namespace Api.Controllers
             {
                 // string options = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
                 _context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
-            } else {
+            }
+            else
+            {
                 _context = context;
             }
         }
@@ -61,7 +63,8 @@ namespace Api.Controllers
 
             if (patientToUpdate == null)
             {
-                return NotFound();
+                NotFound();
+                return;
             }
 
             patientToUpdate.Nome = patient.Nome;
@@ -81,7 +84,8 @@ namespace Api.Controllers
             var patientToDelete = _context.Patients.Find(id);
             if (patientToDelete == null)
             {
-                return NotFound();
+                NotFound();
+                return;
             }
             _context.Patients.Remove(patientToDelete);
             _context.SaveChanges();

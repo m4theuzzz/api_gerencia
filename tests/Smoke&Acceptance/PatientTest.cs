@@ -9,6 +9,7 @@ public class PatientTest
     {
         // Arrange
         var patient = new Patient(
+            1,
             "Test",
             "Patient",
             'M',
@@ -33,6 +34,7 @@ public class PatientTest
     {
         // Arrange
         var patient = new Patient(
+            1,
             "Test",
             "Patient",
             'M',
@@ -51,7 +53,7 @@ public class PatientTest
         // Assert
         Assert.True(imc > 0);
         Assert.Equal(30, idade);
-        Assert.Equal(1, cpfValido);
+        Assert.True(cpfValido);
         Assert.NotNull(situacaoImc);
     }
 }

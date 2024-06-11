@@ -18,6 +18,7 @@ public class PatientsControllerTest
         mockContext.Setup(m => m.Patients).Returns(mockSet.Object);
 
         var patient = new Patient(
+            1,
             "Test",
             "Patient",
             'M',
@@ -42,9 +43,9 @@ public class PatientsControllerTest
         // Arrange
         var data = new List<Patient>
         {
-            new Patient { Id = 1, Nome = "Test1" },
-            new Patient { Id = 2, Nome = "Test2" },
-            new Patient { Id = 3, Nome = "Test3" },
+            new Patient(1, "Test1", "Patient1", 'M', DateTime.Now.AddYears(-15), 170, 70, "12345678901"),
+            new Patient(2, "Test2", "Patient2", 'F', DateTime.Now.AddYears(-30), 170, 70, "12345678902"),
+            new Patient(3, "Test3", "Patient3", 'M', DateTime.Now.AddYears(-30), 170, 70, "12345678903")
         }.AsQueryable();
 
         var mockSet = new Mock<DbSet<Patient>>();
@@ -62,7 +63,14 @@ public class PatientsControllerTest
         var patients = controller.Get();
 
         // Assert
-        Assert.Equal(3, patients.Count());
+        if (patients.Value != null)
+        {
+            Assert.Equal(3, patients.Value.Count());
+        }
+        else
+        {
+            Assert.True(false, "Patients value is null");
+        }
     }
 
     [Fact]
@@ -71,9 +79,9 @@ public class PatientsControllerTest
         // Arrange
         var data = new List<Patient>
         {
-            new Patient { Id = 1, Nome = "Test1" },
-            new Patient { Id = 2, Nome = "Test2" },
-            new Patient { Id = 3, Nome = "Test3" },
+            new Patient(1, "Test1", "Patient1", 'M', DateTime.Now.AddYears(-30), 170, 70, "12345678901"),
+            new Patient(2, "Test2", "Patient2", 'M', DateTime.Now.AddYears(-25), 170, 70, "12345678902"),
+            new Patient(3, "Test3", "Patient3", 'F', DateTime.Now.AddYears(-35), 170, 70, "12345678903")
         }.AsQueryable();
 
         var mockSet = new Mock<DbSet<Patient>>();
@@ -91,7 +99,14 @@ public class PatientsControllerTest
         var patient = controller.Get(1);
 
         // Assert
-        Assert.Equal("Test1", patient.Nome);
+        if (patient.Value != null)
+        {
+            Assert.Equal("Test1", patient.Value.Nome);
+        }
+        else
+        {
+            Assert.True(false, "Patients value is null");
+        }
     }
 
     [Fact]
@@ -100,9 +115,9 @@ public class PatientsControllerTest
         // Arrange
         var data = new List<Patient>
         {
-            new Patient { Id = 1, Nome = "Test1" },
-            new Patient { Id = 2, Nome = "Test2" },
-            new Patient { Id = 3, Nome = "Test3" },
+            new Patient(1, "Test1", "Patient1", 'M', DateTime.Now.AddYears(-35), 170, 70, "12345678901"),
+            new Patient(2, "Test2", "Patient2", 'M', DateTime.Now.AddYears(-30), 170, 70, "12345678902"),
+            new Patient(3, "Test3", "Patient3", 'F', DateTime.Now.AddYears(-20), 170, 70, "12345678903")
         }.AsQueryable();
 
         var mockSet = new Mock<DbSet<Patient>>();
@@ -117,7 +132,7 @@ public class PatientsControllerTest
         var controller = new PatientsController(mockContext.Object);
 
         // Act
-        controller.Put(1, new Patient { Id = 1, Nome = "Test1 Updated" });
+        controller.Put(1, new Patient(1, "Test1", "Patient1", 'M', DateTime.Now.AddYears(-30), 170, 70, "12345678901"));
 
         // Assert
         mockContext.Verify(m => m.SaveChanges(), Times.Once());
@@ -129,9 +144,9 @@ public class PatientsControllerTest
         // Arrange
         var data = new List<Patient>
         {
-            new Patient { Id = 1, Nome = "Test1" },
-            new Patient { Id = 2, Nome = "Test2" },
-            new Patient { Id = 3, Nome = "Test3" },
+            new Patient(1, "Test1", "Patient1", 'M', DateTime.Now.AddYears(-30), 170, 70, "12345678901"),
+            new Patient(2, "Test2", "Patient2", 'M', DateTime.Now.AddYears(-25), 170, 70, "12345678902"),
+            new Patient(3, "Test3", "Patient3", 'F', DateTime.Now.AddYears(-35), 170, 70, "12345678903")
         }.AsQueryable();
 
         var mockSet = new Mock<DbSet<Patient>>();
@@ -162,13 +177,14 @@ public class PatientsControllerTest
         for (int i = 0; i < 100000; i++)
         {
             var patient = new Patient(
+                i + 1,
                 "Test" + i,
                 "Patient" + i,
                 'M',
                 DateTime.Now.AddYears(-30),
                 170,
                 70,
-                "12345678901" + i
+                "12345678901".Substring(0, i.ToString().Length) + i.ToString()
             );
             patients.Add(patient);
         }
