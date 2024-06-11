@@ -1,0 +1,179 @@
+using Xunit;
+using Moq;
+using Api.Controllers;
+using Api.Models;
+using Api.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+
+public class PatientsControllerTest
+{
+    [Fact]
+    public void Post_ShouldAddPatient()
+    {
+        // Arrange
+        var mockSet = new Mock<DbSet<Patient>>();
+        var mockContext = new Mock<ApplicationDbContext>();
+        mockContext.Setup(m => m.Patients).Returns(mockSet.Object);
+
+        var patient = new Patient(
+            "Test",
+            "Patient",
+            'M',
+            DateTime.Now.AddYears(-30),
+            170,
+            70,
+            "12345678901"
+        );
+        var controller = new PatientsController(mockContext.Object);
+
+        // Act
+        controller.Post(patient);
+
+        // Assert
+        mockSet.Verify(m => m.Add(It.IsAny<Patient>()), Times.Once());
+        mockContext.Verify(m => m.SaveChanges(), Times.Once());
+    }
+
+    [Fact]
+    public void Get_ShouldReturnPatients()
+    {
+        // Arrange
+        var data = new List<Patient>
+        {
+            new Patient { Id = 1, Nome = "Test1" },
+            new Patient { Id = 2, Nome = "Test2" },
+            new Patient { Id = 3, Nome = "Test3" },
+        }.AsQueryable();
+
+        var mockSet = new Mock<DbSet<Patient>>();
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.Provider).Returns(data.Provider);
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.Expression).Returns(data.Expression);
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.ElementType).Returns(data.ElementType);
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+
+        var mockContext = new Mock<ApplicationDbContext>();
+        mockContext.Setup(c => c.Patients).Returns(mockSet.Object);
+
+        var controller = new PatientsController(mockContext.Object);
+
+        // Act
+        var patients = controller.Get();
+
+        // Assert
+        Assert.Equal(3, patients.Count());
+    }
+
+    [Fact]
+    public void Get_ShouldReturnPatient()
+    {
+        // Arrange
+        var data = new List<Patient>
+        {
+            new Patient { Id = 1, Nome = "Test1" },
+            new Patient { Id = 2, Nome = "Test2" },
+            new Patient { Id = 3, Nome = "Test3" },
+        }.AsQueryable();
+
+        var mockSet = new Mock<DbSet<Patient>>();
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.Provider).Returns(data.Provider);
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.Expression).Returns(data.Expression);
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.ElementType).Returns(data.ElementType);
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+
+        var mockContext = new Mock<ApplicationDbContext>();
+        mockContext.Setup(c => c.Patients).Returns(mockSet.Object);
+
+        var controller = new PatientsController(mockContext.Object);
+
+        // Act
+        var patient = controller.Get(1);
+
+        // Assert
+        Assert.Equal("Test1", patient.Nome);
+    }
+
+    [Fact]
+    public void Put_ShouldUpdatePatient()
+    {
+        // Arrange
+        var data = new List<Patient>
+        {
+            new Patient { Id = 1, Nome = "Test1" },
+            new Patient { Id = 2, Nome = "Test2" },
+            new Patient { Id = 3, Nome = "Test3" },
+        }.AsQueryable();
+
+        var mockSet = new Mock<DbSet<Patient>>();
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.Provider).Returns(data.Provider);
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.Expression).Returns(data.Expression);
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.ElementType).Returns(data.ElementType);
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+
+        var mockContext = new Mock<ApplicationDbContext>();
+        mockContext.Setup(c => c.Patients).Returns(mockSet.Object);
+
+        var controller = new PatientsController(mockContext.Object);
+
+        // Act
+        controller.Put(1, new Patient { Id = 1, Nome = "Test1 Updated" });
+
+        // Assert
+        mockContext.Verify(m => m.SaveChanges(), Times.Once());
+    }
+
+    [Fact]
+    public void Delete_ShouldRemovePatient()
+    {
+        // Arrange
+        var data = new List<Patient>
+        {
+            new Patient { Id = 1, Nome = "Test1" },
+            new Patient { Id = 2, Nome = "Test2" },
+            new Patient { Id = 3, Nome = "Test3" },
+        }.AsQueryable();
+
+        var mockSet = new Mock<DbSet<Patient>>();
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.Provider).Returns(data.Provider);
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.Expression).Returns(data.Expression);
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.ElementType).Returns(data.ElementType);
+        mockSet.As<IQueryable<Patient>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+
+        var mockContext = new Mock<ApplicationDbContext>();
+        mockContext.Setup(c => c.Patients).Returns(mockSet.Object);
+
+        var controller = new PatientsController(mockContext.Object);
+
+        // Act
+        controller.Delete(1);
+
+        // Assert
+        mockContext.Verify(m => m.SaveChanges(), Times.Once());
+    }
+
+    [Fact]
+    public void Test_Can_Create_Many_Patients()
+    {
+        // Arrange
+        var patients = new List<Patient>();
+
+        // Act
+        for (int i = 0; i < 100000; i++)
+        {
+            var patient = new Patient(
+                "Test" + i,
+                "Patient" + i,
+                'M',
+                DateTime.Now.AddYears(-30),
+                170,
+                70,
+                "12345678901" + i
+            );
+            patients.Add(patient);
+        }
+
+        // Assert
+        Assert.Equal(100000, patients.Count);
+    }
+}
