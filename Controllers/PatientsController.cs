@@ -30,6 +30,7 @@ namespace Api.Controllers
         [HttpGet("/all")]
         public ActionResult<IEnumerable<Patient>> Get()
         {
+            println("GET /all")
             var patients = _context.Patients.ToList();
             if (patients.Count == 0)
             {
