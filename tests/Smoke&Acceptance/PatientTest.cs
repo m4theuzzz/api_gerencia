@@ -20,13 +20,13 @@ public class PatientTest
         );
 
         // Assert
-        Assert.Equal("Test", patient.Nome);
-        Assert.Equal("Patient", patient.Sobrenome);
-        Assert.Equal('M', patient.Sexo);
+        Assert.Equal("Test", patient.nome);
+        Assert.Equal("Patient", patient.sobrenome);
+        Assert.Equal('M', patient.sexo);
         Assert.Equal(30, patient.CalcularIdade());
-        Assert.Equal(170, patient.Altura);
-        Assert.Equal(70, patient.Peso);
-        Assert.Equal("12345678901", patient.CPF);
+        Assert.Equal(170, patient.altura);
+        Assert.Equal(70, patient.peso);
+        Assert.Equal("12345678901", patient.cpf);
     }
 
     [Fact]

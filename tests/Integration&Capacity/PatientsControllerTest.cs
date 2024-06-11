@@ -15,7 +15,7 @@ public class PatientsControllerTest
         // Arrange
         var mockSet = new Mock<DbSet<Patient>>();
         var mockContext = new Mock<ApplicationDbContext>();
-        mockContext.Setup(m => m.Patients).Returns(mockSet.Object);
+        mockContext.Setup(m => m.patients).Returns(mockSet.Object);
 
         var patient = new Patient(
             1,
@@ -55,7 +55,7 @@ public class PatientsControllerTest
         mockSet.As<IQueryable<Patient>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
 
         var mockContext = new Mock<ApplicationDbContext>();
-        mockContext.Setup(c => c.Patients).Returns(mockSet.Object);
+        mockContext.Setup(c => c.patients).Returns(mockSet.Object);
 
         var controller = new PatientsController(mockContext.Object);
 
@@ -91,7 +91,7 @@ public class PatientsControllerTest
         mockSet.As<IQueryable<Patient>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
 
         var mockContext = new Mock<ApplicationDbContext>();
-        mockContext.Setup(c => c.Patients).Returns(mockSet.Object);
+        mockContext.Setup(c => c.patients).Returns(mockSet.Object);
 
         var controller = new PatientsController(mockContext.Object);
 
@@ -101,7 +101,7 @@ public class PatientsControllerTest
         // Assert
         if (patient.Value != null)
         {
-            Assert.Equal("Test1", patient.Value.Nome);
+            Assert.Equal("Test1", patient.Value.nome);
         }
         else
         {
@@ -127,7 +127,7 @@ public class PatientsControllerTest
         mockSet.As<IQueryable<Patient>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
 
         var mockContext = new Mock<ApplicationDbContext>();
-        mockContext.Setup(c => c.Patients).Returns(mockSet.Object);
+        mockContext.Setup(c => c.patients).Returns(mockSet.Object);
 
         var controller = new PatientsController(mockContext.Object);
 
@@ -156,7 +156,7 @@ public class PatientsControllerTest
         mockSet.As<IQueryable<Patient>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
 
         var mockContext = new Mock<ApplicationDbContext>();
-        mockContext.Setup(c => c.Patients).Returns(mockSet.Object);
+        mockContext.Setup(c => c.patients).Returns(mockSet.Object);
 
         var controller = new PatientsController(mockContext.Object);
 

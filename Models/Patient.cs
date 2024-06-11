@@ -2,74 +2,75 @@ namespace Api.Models
 {
     public class Patient
     {
-        public int Id { get; set; }
-        public String Nome { get; set; }
-        public String Sobrenome { get; set; }
-        public Char Sexo { get; set; }
-        public DateTime Nascimento { get; set; }
-        public int Idade { get; set; }
-        public Double Altura { get; set; }
-        public Double Peso { get; set; }
-        public String CPF { get; set; }
-        public Double IMC { get; set; }
+        public int id { get; set; }
+        public string nome { get; set; }
+        public string sobrenome { get; set; }
+        public char sexo { get; set; }
+        private DateTime _nascimento;
+        public DateTime nascimento { get { return _nascimento; } set { _nascimento = value; this.CalcularIdade(); } }
+        public int idade { get; set; }
+        public double altura { get; set; }
+        public double peso { get; set; }
+        public string cpf { get; set; }
+        public double imc { get; set; }
 
         public Patient(
-            int Id,
-            String Nome,
-            String Sobrenome,
-            Char Sexo,
-            DateTime Nascimento,
-            Double Altura,
-            Double Peso,
-            String CPF
+            int id,
+            string nome,
+            string sobrenome,
+            char sexo,
+            DateTime nascimento,
+            double altura,
+            double peso,
+            string cpf
         )
         {
-            this.Id = Id;
-            this.Nome = Nome;
-            this.Sobrenome = Sobrenome;
-            this.Sexo = Sexo;
-            this.Nascimento = Nascimento;
-            this.Altura = Altura;
-            this.Peso = Peso;
-            this.CPF = CPF;
-            this.IMC = 0;
+            this.id = id;
+            this.nome = nome;
+            this.sobrenome = sobrenome;
+            this.sexo = sexo;
+            this.nascimento = nascimento;
+            this.altura = altura;
+            this.peso = peso;
+            this.cpf = cpf;
+
             this.CalcularIdade();
             this.CalcularIMC();
         }
 
         public double ObterPesoIdeal()
         {
-            return (this.Sexo == 'M') ? 72.7 * this.Altura - 58 : 62.1 * this.Altura - 44.7;
+            return (this.sexo == 'M') ? 72.7 * this.altura - 58 : 62.1 * this.altura - 44.7;
         }
 
         public double CalcularIMC()
         {
-            if (this.Altura == 0 || this.Peso == 0) { return 0; }
-            this.IMC = this.Peso / (this.Altura * this.Altura);
-            return this.IMC;
+            if (this.altura == 0 || this.peso == 0) { return 0; }
+            this.imc = this.peso / (this.altura * this.altura);
+            return this.imc;
         }
 
         public int CalcularIdade()
         {
-            this.Idade = DateTime.Now.Year - this.Nascimento.Year;
-            return this.Idade;
+            this.idade = DateTime.Now.Year - this.nascimento.Year;
+            return this.idade;
         }
 
         public String obterSituacaoIMC()
         {
             this.CalcularIMC();
-            return IMCExtensions.ToFriendlyString(this.IMC);
+            return IMCExtensions.ToFriendlyString(this.imc);
         }
 
         public bool ValidarCPF()
         {
-            if (CPF.Length != 11) { return false; }
+            if (cpf.Length != 11) { return false; }
             return true;
         }
 
         public String ObterCPFOfuscado()
         {
-            return "***." + CPF.Substring(3, 3) + ".***-**";
+            return "***." + cpf.Substring(3, 3) + ".***-**";
         }
     }
 }

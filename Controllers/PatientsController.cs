@@ -14,24 +14,17 @@ namespace Api.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public PatientsController(ApplicationDbContext? context)
+        public PatientsController(
+            ApplicationDbContext? context
+        )
         {
-            if (context == null)
-            {
-                // string options = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
-                _context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
-            }
-            else
-            {
-                _context = context;
-            }
+            _context = context != null ? context : new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
         }
 
-        [HttpGet("/all")]
+        [HttpGet]
         public ActionResult<IEnumerable<Patient>> Get()
         {
-            println("GET /all")
-            var patients = _context.Patients.ToList();
+            var patients = _context.patients.ToList();
             if (patients.Count == 0)
             {
                 return NotFound();
@@ -42,7 +35,7 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public ActionResult<Patient> Get(int id)
         {
-            var patient = _context.Patients.Find(id);
+            var patient = _context.patients.Find(id);
             if (patient == null)
             {
                 return NotFound();
@@ -53,14 +46,14 @@ namespace Api.Controllers
         [HttpPost]
         public void Post([FromBody] Patient patient)
         {
-            _context.Patients.Add(patient);
+            _context.patients.Add(patient);
             _context.SaveChanges();
         }
 
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Patient patient)
         {
-            var patientToUpdate = _context.Patients.Find(id);
+            var patientToUpdate = _context.patients.Find(id);
 
             if (patientToUpdate == null)
             {
@@ -68,27 +61,26 @@ namespace Api.Controllers
                 return;
             }
 
-            patientToUpdate.Nome = patient.Nome;
-            patientToUpdate.Sobrenome = patient.Sobrenome;
-            patientToUpdate.Sexo = patient.Sexo;
-            patientToUpdate.Nascimento = patient.Nascimento;
-            patientToUpdate.Idade = patient.Idade;
-            patientToUpdate.Altura = patient.Altura;
-            patientToUpdate.Peso = patient.Peso;
-            patientToUpdate.CPF = patient.CPF;
+            patientToUpdate.nome = patient.nome;
+            patientToUpdate.sobrenome = patient.sobrenome;
+            patientToUpdate.sexo = patient.sexo;
+            patientToUpdate.nascimento = patient.nascimento;
+            patientToUpdate.altura = patient.altura;
+            patientToUpdate.peso = patient.peso;
+            patientToUpdate.cpf = patient.cpf;
             _context.SaveChanges();
         }
 
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var patientToDelete = _context.Patients.Find(id);
+            var patientToDelete = _context.patients.Find(id);
             if (patientToDelete == null)
             {
                 NotFound();
                 return;
             }
-            _context.Patients.Remove(patientToDelete);
+            _context.patients.Remove(patientToDelete);
             _context.SaveChanges();
         }
     }

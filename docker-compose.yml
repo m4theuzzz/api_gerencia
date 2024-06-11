@@ -4,8 +4,8 @@ services:
   database:
     image: postgres:15.4
     volumes:
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./postgres/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+      - ./transactions/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./transactions/seed.sql:/docker-entrypoint-initdb.d/seed.sql
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: toor
@@ -25,6 +25,6 @@ services:
     ports:
       - "8000:80"
     environment:
-      - ConnectionStrings__DefaultConnection=Host=database;Database=Base;Username=postgres;Password=toor
+      - ConnectionStrings__DefaultConnection=Host=database;Database=base;Username=postgres;Password=toor
     depends_on:
       - database

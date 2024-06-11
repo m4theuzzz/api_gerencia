@@ -11,6 +11,6 @@ namespace Api.Data
         }
 
         // Defina os DbSets aqui
-        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Patient> patients { get; set; }
     }
 }
