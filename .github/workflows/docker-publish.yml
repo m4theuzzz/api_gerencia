@@ -15,7 +15,7 @@ jobs:
     - name: Build the Docker image
       run: docker compose up -d && sleep 30 && docker ps
     - name: Test
-      run: docker exec -i $(docker ps -f name=api_gerencia-api-1 -q) dotnet test
+      run: docker exec -i $(docker ps -f name=api_gerencia-api-1 -q) (cd /app && dotnet test)
 
   CD_push_to_registry:
     name: Push Docker image to Docker Hub
