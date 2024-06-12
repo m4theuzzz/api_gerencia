@@ -65,6 +65,25 @@ namespace Api.Models
         public bool ValidarCPF()
         {
             if (cpf.Length != 11) { return false; }
+            string[] breakCpf = cpf.split("-");
+            int[] cpfNumbers = breakCpf[0].Select(c => int.Parse(c.ToString())).ToArray();
+            int[] validationNumbers = breakCpf[1].Select(c => int.Parse(c.ToString())).ToArray();
+
+            int v1, v2;
+            for (int i = 0; i < 9; i++)
+            {
+                v1 += cpfNumbers[i] * (9 - (i % 10));
+                v2 += cpfNumbers[i] * (9 - ((i + 1) % 10));
+            }
+            v1 = (v1 % 11) % 10;
+            v2 += v1 * 9;
+            v2 = (v2 % 11) % 10;
+
+            if (v1 != validationNumbers[0] || v2 != validationNumbers[1])
+            {
+                return false;
+            }
+
             return true;
         }
 
